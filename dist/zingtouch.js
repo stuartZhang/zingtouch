@@ -1,10 +1,20 @@
 /*!
  * 
  *   ZingTouch v2.0.0
- *   Author: ZingChart http://zingchart.com
+ *   Author: StuartZhang https://github.com/stuartZhang
  *   License: MIT
  */
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["ZingTouch"] = factory();
+	else
+		root["ZingTouch"] = factory();
+})(window, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -1242,7 +1252,7 @@ function interpreter(bindings, event, state) {
 /*!**************************!*\
   !*** ./src/core/main.js ***!
   \**************************/
-/*! no exports provided */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1254,7 +1264,12 @@ __webpack_require__.r(__webpack_exports__);
  * and to expose the ZingTouch object
  */
 
-window.ZingTouch = _ZingTouch_js__WEBPACK_IMPORTED_MODULE_0__["default"];
+
+if (typeof window !== 'undefined') {
+  window.ZingTouch = _ZingTouch_js__WEBPACK_IMPORTED_MODULE_0__["default"];
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (_ZingTouch_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 /***/ }),
 
@@ -1271,14 +1286,12 @@ __webpack_require__.r(__webpack_exports__);
  * @file util.js
  * Various accessor and mutator functions to handle state and validation.
  */
-var CIRCLE_DEGREES = 360;
-var HALF_CIRCLE_DEGREES = 180;
+
 /**
  *  Contains generic helper functions
  * @type {Object}
  * @namespace util
  */
-
 var util = {
   /**
    * Normalizes window events to be either of type start, move, or end.
@@ -1326,8 +1339,7 @@ var util = {
    * @return {number} The numerical value between two points
    */
   distanceBetweenTwoPoints: function distanceBetweenTwoPoints(x0, x1, y0, y1) {
-    var dist = Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
-    return Math.round(dist * 100) / 100;
+    return Math.hypot(x1 - x0, y1 - y0);
   },
 
   /**
@@ -1358,27 +1370,22 @@ var util = {
    * @param {number} originY
    * @param {number} projectionX
    * @param {number} projectionY
-   * @return {number} - Degree along the unit circle where the project lies
+   * @return {number} - Radians along the unit circle where the projection lies
    */
   getAngle: function getAngle(originX, originY, projectionX, projectionY) {
-    var angle = Math.atan2(projectionY - originY, projectionX - originX) * (HALF_CIRCLE_DEGREES / Math.PI);
-    return CIRCLE_DEGREES - (angle < 0 ? CIRCLE_DEGREES + angle : angle);
+    return Math.atan2(projectionY - originY, projectionX - originX);
   },
 
   /**
-   * Calculates the angular distance in degrees between two angles
-   *  along the unit circle
-   * @param {number} start - The starting point in degrees
-   * @param {number} end - The ending point in degrees
-   * @return {number} The number of degrees between the
-   * starting point and ending point. Negative degrees denote a clockwise
-   * direction, and positive a counter-clockwise direction.
+   * Calculates the angular distance in radians between two angles along the
+   * unit circle
+   * @param {number} start - The starting point in radians
+   * @param {number} end - The ending point in radians
+   * @return {number} The number of radians between the starting point and
+   * ending point. 
    */
   getAngularDistance: function getAngularDistance(start, end) {
-    var angle = (end - start) % CIRCLE_DEGREES;
-    var sign = angle < 0 ? 1 : -1;
-    angle = Math.abs(angle);
-    return angle > HALF_CIRCLE_DEGREES ? sign * (CIRCLE_DEGREES - angle) : sign * angle;
+    return end - start;
   },
 
   /**
@@ -1429,8 +1436,7 @@ var util = {
    * @return {Boolean}
    */
   isInside: function isInside(x, y, target) {
-    var rect = target.getBoundingClientRect();
-    return x > rect.left && x < rect.left + rect.width && y > rect.top && y < rect.top + rect.height;
+    return x > target.clientLeft && x < target.clientLeft + target.clientWidth && y > target.clientTop && y < target.clientTop + target.clientHeight;
   },
 
   /**
@@ -1576,7 +1582,7 @@ function (_Gesture) {
 
       if (inputs.length === DEFAULT_INPUTS) {
         // Store the progress in the first input.
-        var progress = inputs[0].getGestureProgress(this.type);
+        var progress = inputs[0].getGestureProgress(this.getId());
         progress.lastEmittedDistance = _core_util_js__WEBPACK_IMPORTED_MODULE_1__["default"].distanceBetweenTwoPoints(inputs[0].current.x, inputs[1].current.x, inputs[0].current.y, inputs[1].current.y);
       }
     }
@@ -1597,7 +1603,7 @@ function (_Gesture) {
         var currentDistance = _core_util_js__WEBPACK_IMPORTED_MODULE_1__["default"].distanceBetweenTwoPoints(inputs[0].current.x, inputs[1].current.x, inputs[0].current.y, inputs[1].current.y);
         var centerPoint = _core_util_js__WEBPACK_IMPORTED_MODULE_1__["default"].getMidpoint(inputs[0].current.x, inputs[1].current.x, inputs[0].current.y, inputs[1].current.y); // Progress is stored in the first input.
 
-        var progress = inputs[0].getGestureProgress(this.type);
+        var progress = inputs[0].getGestureProgress(this.getId());
         var change = currentDistance - progress.lastEmittedDistance;
 
         if (Math.abs(change) >= this.threshold) {
@@ -2487,7 +2493,7 @@ function (_Gesture) {
 
       if (inputs.length === this.numInputs) {
         inputs.forEach(function (input) {
-          var progress = input.getGestureProgress(_this2.type);
+          var progress = input.getGestureProgress(_this2.getId());
           progress.start = new Date().getTime();
         });
       }
@@ -2560,7 +2566,7 @@ function (_Gesture) {
           return null;
         }
 
-        var progress = inputs[i].getGestureProgress(this.type);
+        var progress = inputs[i].getGestureProgress(this.getId());
 
         if (!progress.start) {
           return null;
@@ -2598,4 +2604,5 @@ function (_Gesture) {
 /***/ })
 
 /******/ });
+});
 //# sourceMappingURL=zingtouch.js.map
