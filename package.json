@@ -1,5 +1,5 @@
 {
-  "name": "zingtouch",
+  "name": "zingtouch-stzhang",
   "version": "2.0.0",
   "description": "A modern JavaScript touch gesture library",
   "main": "index.js",
@@ -13,10 +13,10 @@
     "docs": "esdoc -c esdoc.json",
     "test": "karma start karma.conf.js --mode=production"
   },
-  "author": "ZingChart",
+  "author": "StuartZhang",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zingchart/zingtouch"
+    "url": "https://github.com/stuartZhang/zingtouch"
   },
   "license": "MIT",
   "devDependencies": {

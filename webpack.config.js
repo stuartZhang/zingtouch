@@ -34,7 +34,7 @@ module.exports = (env, argv) => {
   config.output.filename = filename;
   plugins.push(new webpack.BannerPlugin(`
   ZingTouch v${process.env.npm_package_version}
-  Author: ZingChart http://zingchart.com
+  Author: StuartZhang https://github.com/stuartZhang
   License: MIT`
   ));
 
