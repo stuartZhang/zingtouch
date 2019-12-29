@@ -24,6 +24,8 @@
     "@babel/preset-env": "^7.0.0",
     "babel-loader": "^8.0.0",
     "chai": "^4.1.2",
+    "esdoc": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0",
     "eslint": "^5.4.0",
     "eslint-config-google": "^0.9.1",
     "karma": "^3.0.0",
