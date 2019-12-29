@@ -154,9 +154,8 @@ let util = {
    * @return {Boolean}
    */
   isInside(x, y, target) {
-    const rect = target.getBoundingClientRect();
-    return ((x > rect.left && x < rect.left + rect.width) &&
-    (y > rect.top && y < rect.top + rect.height));
+    return ((x > target.clientLeft && x < target.clientLeft + target.clientWidth) &&
+            (y > target.clientTop  && y < target.clientTop  + target.clientHeight));
   },
   /**
    * Polyfill for event.propagationPath
